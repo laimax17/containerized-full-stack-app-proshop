@@ -15,7 +15,11 @@ connectDB()
 
 const app = express()
 
-if (process.env.NODE_ENV === "development") {
+//for docker deployment
+const NODE_ENV = 'development';
+const PAYPAL_CLIENT_ID = 'AWJqR0P3Gk8y7iLIFlysiqTDozHxCpj451IIPr062jYkOX7FgFKz9TGWRCbVgCaYN9hRpPc_tlBMFjAL'
+
+if (NODE_ENV === "development") {
     app.use(morgan("dev"))
 }
 
@@ -27,7 +31,7 @@ app.use("/api/orders", orderRoutes)
 app.use("/api/upload", uploadRoutes)
 
 app.get("/api/config/paypal", (req, res) =>
-    res.send(process.env.PAYPAL_CLIENT_ID)
+    res.send(PAYPAL_CLIENT_ID)
 )
 
 const __dirname = path.resolve()
@@ -48,7 +52,7 @@ if (process.env.NODE_ENV === "production") {
 app.use(notFound)
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 80
 
 app.listen(
     PORT,
