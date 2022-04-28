@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const MONGO_URI = 'mongodb+srv://mazzy17:mazzy17@cluster0.uyhzm.mongodb.net/proshop?retryWrites=true&w=majority'
-
+// const MONGO_URI = process.env.MONGO_URI;
+// const MONGO_URI = 'mongodb://mongo_db:27017/db';
 const connectDB = async () => {
     try{
         const conn = await mongoose.connect(MONGO_URI, {

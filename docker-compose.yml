@@ -9,22 +9,25 @@ services:
   mongo_db:
     image: mongo
     restart: always
-    # volumes:
-    #   - data:/data/db
-    # ports:
-    #   - "27017:27017"
-    container_name: shop_db
-
-  nginx:
-    depends_on:
-      - backend
-      - frontend
-    restart: always
-    build:
-      dockerfile: Dockerfile
-      context: ./nginx
     ports:
-      - "3050:8080"
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    container_name: shop_db
+    networks:
+      - proshop-network
+    
+
+  # nginx:
+  #   depends_on:
+  #     - backend
+  #     - frontend
+  #   restart: always
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./nginx
+  #   ports:
+  #     - "5050:8000"
 
   backend:
     build:
@@ -36,12 +39,17 @@ services:
     #   - /app/node_modules
     #   - ./server:/app
     ports:
-      - "80:80"
+      - 5001:5001
+    networks:
+      - proshop-network
+    environment:
+      - MONGO_URI=mongodb://27017:27017
 
   frontend:
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - backend=http://backend:5001
     build:
       dockerfile: Dockerfile
       context: ./frontend/
@@ -49,16 +57,18 @@ services:
     #   - /app/node_modules
     #   - ./client:/app
     ports:
-      - "4000:4000"
+      - 3000:3000
+    # expose:
+    #   - 4001
     depends_on:
       - backend
+      
+    networks:
+      - proshop-network
 
-  # adminer:
-  #     image: adminer:latest
-  #     restart: unless-stopped
-  #     ports:
-  #       - 8000:8080
-  #     depends_on:
-  #       - mongo_db
-  #     environment:
-  #       ADMINER_DEFAULT_SERVER: mongo_db
+networks:
+    proshop-network:
+        driver: bridge
+volumes:
+    mongo-data:
+        driver: local
