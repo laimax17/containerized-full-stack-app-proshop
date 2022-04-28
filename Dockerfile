@@ -4,6 +4,6 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY ./backend ./backend
 RUN npm i
-EXPOSE 80
+# EXPOSE 5000
 
-CMD ["npm","run","start"]
+CMD ["npm","run","start"]s
