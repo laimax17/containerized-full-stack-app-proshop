@@ -13,9 +13,7 @@ services:
   #     - proshop-network
 
   backend:
-    build:
-      dockerfile: Dockerfile
-      context: "./"
+    image: laimax/proshop:backend
     # depends_on:
       # - mongo_db
     ports:
@@ -30,9 +28,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - backend=http://backend:5001
-    build:
-      dockerfile: Dockerfile
-      context: ./frontend/
+    image: laimax/proshop:frontend
     ports:
       - 3000:3000
     depends_on:
